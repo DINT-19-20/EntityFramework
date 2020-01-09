@@ -5,8 +5,100 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:EntityFramework"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+        Title="EntityFramework" Height="450" Width="800">
+    <Window.Resources>
+        <local:NumeroPedidosConverter x:Key="conversorPedidos"></local:NumeroPedidosConverter>
+
+        <Style TargetType="Button">
+            <Setter Property="Width" Value="100"></Setter>
+            <Setter Property="HorizontalAlignment" Value="Left"></Setter>
+        </Style>
+        <Style TargetType="TextBlock" x:Key="CeldaNumerica">
+            <Setter Property="TextAlignment" Value="Right"></Setter>
+        </Style>
+    </Window.Resources>
+    <TabControl>
+        <TabItem Header="ListBox">
+            <ListBox x:Name="InsertarListBox" ItemsSource="{Binding}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock>
+                                <Run Text="{Binding id}"></Run>
+                                <Run>-</Run>
+                                <Run Text="{Binding nombre}"></Run>
+                                <Run Text="{Binding apellido}"></Run>
+                        </TextBlock>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </TabItem>
+        <TabItem Header="Insertar">
+            <StackPanel x:Name="InsertarStackPanel" Orientation="Vertical" Margin="10">
+                <TextBlock>Identificador</TextBlock>
+                <TextBox Text="{Binding id}" Margin="0,0,0,5"></TextBox>
+                <TextBlock>Nombre</TextBlock>
+                <TextBox  Text="{Binding nombre}" Margin="0,0,0,5"></TextBox>
+                <TextBlock>Apellido</TextBlock>
+                <TextBox  Text="{Binding apellido}" Margin="0,0,0,15"></TextBox>
+                <Button x:Name="InsertarButton" Click="InsertarButton_Click">Insertar</Button>
+            </StackPanel>
+        </TabItem>
+        <TabItem Header="Eliminar">
+            <StackPanel Margin="10">
+                <ComboBox x:Name="EliminarComboBox" ItemsSource="{Binding}" DisplayMemberPath="id" Width="200" HorizontalAlignment="Left" Margin="0,0,0,15"/>
+                <Button x:Name="EliminarButton" Click="EliminarButton_Click" >Eliminar</Button>
+            </StackPanel>
+        </TabItem>
+        <TabItem Header="Modificar">
+            <StackPanel Margin="10">
+                <ComboBox x:Name="ModificarComboBox" ItemsSource="{Binding}" DisplayMemberPath="id" Width="200" HorizontalAlignment="Left" Margin="0,0,0,15"/>
+                <StackPanel DataContext="{Binding ElementName=ModificarComboBox,Path=SelectedItem}">
+                    <TextBlock>Identificador</TextBlock>
+                    <TextBox Text="{Binding id}" Margin="0,0,0,5"></TextBox>
+                    <TextBlock>Nombre</TextBlock>
+                    <TextBox  Text="{Binding nombre}" Margin="0,0,0,5"></TextBox>
+                    <TextBlock>Apellido</TextBlock>
+                    <TextBox  Text="{Binding apellido}" Margin="0,0,0,15"></TextBox>
+                </StackPanel>
+                <Button x:Name="ModificarButton" Click="ModificarButton_Click">Modificar</Button>
+            </StackPanel>
+        </TabItem>
+        <TabItem Header="DataGrid">
+            <DockPanel Margin="10">
+                <Button DockPanel.Dock="Bottom" x:Name="ActualizarButton" Click="ActualizarButton_Click">Actualizar</Button>
+                <DataGrid x:Name="ClientesDataGrid" Margin="0,0,0,10" ItemsSource="{Binding}" AutoGenerateColumns="False">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Binding="{Binding id}" Header="Identificador" Width="*"></DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding nombre}" Header="Nombre" Width="2*"></DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding apellido}" Header="Apellido" Width="2*"></DataGridTextColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </DockPanel>
+        </TabItem>
+        <TabItem Header="Filtrar">
+            <DockPanel Margin="10">
+                <StackPanel Orientation="Horizontal"  DockPanel.Dock="Top"  Margin="0,0,0,10" >
+                    <TextBlock>Nombre:</TextBlock>
+                    <TextBox x:Name="FiltrarTextBox" Width="200" Margin="5,0,5,0"></TextBox>
+                    <Button x:Name="FiltrarButton" Click="FiltrarButton_Click">Filtrar</Button>
+                </StackPanel>
+                <DataGrid x:Name="ClientesFiltrarDataGrid" ItemsSource="{Binding}" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="True">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Binding="{Binding id}" Header="Identificador" Width="*" IsReadOnly="True"></DataGridTextColumn>
+                        <DataGridTemplateColumn Header="Nombre completo" Width="3*" IsReadOnly="True">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock>
+                                        <Run Text="{Binding nombre}"></Run>
+                                        <Run Text="{Binding apellido}"></Run>
+                                    </TextBlock>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTextColumn Binding="{Binding PEDIDOS.Count}" Header="Nº de pedidos" Width="*" IsReadOnly="True" ElementStyle="{StaticResource CeldaNumerica}"></DataGridTextColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </DockPanel>
+        </TabItem>
+    </TabControl>
 </Window>
